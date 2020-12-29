@@ -29,7 +29,7 @@ public class App {
     private static Configuration createConfig(String[] args) throws ParseException {
 
         Options options = new Options();
-        options.addOption("url", "url", true, "FritzBox Url, defautl is fritz.box");
+        options.addOption("url", "url", true, "FritzBox Url, default is http://fritz.box");
         options.addRequiredOption("u", "username", true, "Username for FritzBox login");
         options.addRequiredOption("p", "password", true, "Password for FritzBox login");
 
