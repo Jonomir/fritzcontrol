@@ -21,9 +21,7 @@ public class DeviceController {
     private final static String DEVICE_PAGE_ID = "kidLis";
     private final static String DEVICE_PAGE_PATH = "/internet/kids_userlist.lua";
 
-
     private FritzBoxClient fritzBoxClient;
-    private Map<String, String> profiles;
 
     public DeviceController(FritzBoxClient fritzBoxClient) {
         this.fritzBoxClient = fritzBoxClient;
@@ -31,7 +29,7 @@ public class DeviceController {
 
     public List<Device> getDevices() throws IOException {
         ResponseBody response = CallUtil.executeAndCheck(fritzBoxClient.getData(DEVICE_PAGE_ID));
-        return parseDeviceTable(response);
+        return parseDeviceResponse(response);
     }
 
     public List<Device> saveDevices(List<Device> devices) throws IOException {
@@ -41,10 +39,10 @@ public class DeviceController {
         deviceData.put("oldpage", DEVICE_PAGE_PATH);
 
         ResponseBody response = CallUtil.executeAndCheck(fritzBoxClient.sendData(deviceData));
-        return parseDeviceTable(response);
+        return parseDeviceResponse(response);
     }
 
-    private List<Device> parseDeviceTable(ResponseBody in) throws IOException {
+    private List<Device> parseDeviceResponse(ResponseBody in) throws IOException {
         Document document = Jsoup.parse(in.string());
         Elements deviceTableData = document.select("[id=uiDevices]");
 

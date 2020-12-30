@@ -5,15 +5,9 @@ public class Configuration {
     private String username;
     private String password;
 
-    public void setFritzBoxUrl(String fritzBoxUrl) {
+    public Configuration(String fritzBoxUrl, String username, String password) {
         this.fritzBoxUrl = fritzBoxUrl;
-    }
-
-    public void setUsername(String username) {
         this.username = username;
-    }
-
-    public void setPassword(String password) {
         this.password = password;
     }
 

@@ -13,7 +13,10 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import retrofit2.Retrofit;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class App {
@@ -33,39 +36,47 @@ public class App {
         CommandLineParser parser = new DefaultParser();
         CommandLine commandLine = parser.parse(options, args, true);
 
-        Configuration configuration = new Configuration();
-        configuration.setUsername(commandLine.getOptionValue("u"));
-        configuration.setPassword(commandLine.getOptionValue("p"));
-        configuration.setFritzBoxUrl(commandLine.getOptionValue("url", "http://fritz.box"));
+        String fritzBoxUrl = commandLine.getOptionValue("url", "http://fritz.box");
+        String username = commandLine.getOptionValue("u");
+        String password = commandLine.getOptionValue("p");
 
-        return configuration;
+        return new Configuration(fritzBoxUrl, username, password);
     }
 
-
-    private void execute(Configuration configuration) throws Exception {
-
+    private FritzBoxClient createAuthenticatingFritzBoxClient(Configuration configuration) {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new AuthenticationInterceptor(configuration, new Md5AuthenticationStrategy()))
                 .build();
 
-        FritzBoxClient fritzBoxClient = new Retrofit.Builder()
+        return new Retrofit.Builder()
                 .client(okHttpClient)
                 .baseUrl(configuration.getFritzBoxUrl())
                 .build().create(FritzBoxClient.class);
+    }
 
+    private void execute(Configuration configuration) throws Exception {
+
+        FritzBoxClient fritzBoxClient = createAuthenticatingFritzBoxClient(configuration);
         DeviceController controller = new DeviceController(fritzBoxClient);
 
-        List<Device> devices = controller.getDevices();
-        devices.forEach(System.out::println);
+        Map<String, String> deviceProfiles = new HashMap<>();
 
-        devices.stream().filter(d -> d.getName().equals("Jonathan-PC")).forEach(device ->
-            device.getProfiles().stream().filter(p -> p.getName().equals("Fight The Addiction")).findFirst()
+        deviceProfiles.put("Jonathan-PC", "Fight The Addiction");
+
+        setProfilesForDevices(controller, deviceProfiles);
+    }
+
+
+    private void setProfilesForDevices(DeviceController deviceController, Map<String, String> deviceProfiles) throws IOException {
+        List<Device> devices = deviceController.getDevices();
+        deviceProfiles.forEach((deviceName, profileName) -> setProfileForDevice(devices, deviceName, profileName));
+        deviceController.saveDevices(devices);
+    }
+
+    private void setProfileForDevice(List<Device> devices, String deviceName, String profileName) {
+        devices.stream().filter(d -> d.getName().equals(deviceName)).forEach(device ->
+            device.getProfiles().stream().filter(p -> p.getName().equals(profileName)).findFirst()
                     .ifPresent(device::setCurrentProfile));
-
-        System.out.println("===================== Device Changed =====================");
-
-        List<Device> changedDevices = controller.saveDevices(devices);
-        changedDevices.forEach(System.out::println);
     }
 
 }
