@@ -1,4 +1,4 @@
-package dev.romahn.fritzcontrol.api.device.dto;
+package dev.romahn.fritzcontrol.api.data.device.dto;
 
 import java.security.InvalidParameterException;
 import java.util.Collections;

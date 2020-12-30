@@ -13,9 +13,9 @@ public interface FritzBoxClient {
 
     @POST("/data.lua")
     @FormUrlEncoded
-    Call<ResponseBody> getData(@Field("page") String page);
+    Call<ResponseBody> fetchData(@Field("page") String page);
 
     @POST("/data.lua")
     @FormUrlEncoded
-    Call<ResponseBody> sendData(@FieldMap Map<String, String> devices);
+    Call<ResponseBody> sendData(@FieldMap Map<String, String> values);
 }
