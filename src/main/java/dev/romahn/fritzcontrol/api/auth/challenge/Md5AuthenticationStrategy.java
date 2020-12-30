@@ -8,7 +8,7 @@ public class Md5AuthenticationStrategy implements AuthenticationStrategy {
     private final static String AUTHENTICATION_PATH = "/login_sid.lua";
 
     @Override
-    public String getAuthenticationPath() {
+    public String getPath() {
         return AUTHENTICATION_PATH;
     }
 

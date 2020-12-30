@@ -14,7 +14,7 @@ public class Pbkdf2AuthenticationStrategy implements AuthenticationStrategy {
     private final static String AUTHENTICATION_PATH = "/login_sid.lua?version=2";
 
     @Override
-    public String getAuthenticationPath() {
+    public String getPath() {
         return AUTHENTICATION_PATH;
     }
 
