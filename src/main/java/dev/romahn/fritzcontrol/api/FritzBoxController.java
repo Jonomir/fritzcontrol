@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class FritzBoxController {
 
     private FritzBoxClient fritzBoxClient;
+    private Map<String, String> profiles;
 
     public FritzBoxController(Configuration configuration) {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -46,33 +47,35 @@ public class FritzBoxController {
         Document document = Jsoup.parse(in);
         Elements deviceTable = document.select("[id=uiDevices]");
 
-        Map<String, Profile> profiles = parseProfiles(deviceTable);
+        profiles = parseProfiles(deviceTable);
 
         return deviceTable.select("[class=block]").stream().map(e -> {
             Element device = e.parent();
 
             String id = device.selectFirst("[data-uid]").attr("data-uid");
             String name = device.selectFirst("[class=name]").attr("title");
-            Profile profile = profiles.get(device.selectFirst("[selected]").attr("value"));
+            String profile = device.selectFirst("[selected]").attr("value");
 
             return new Device(id, name, profile);
         }).collect(Collectors.toList());
     }
 
-    private Map<String, Profile> parseProfiles(Elements deviceTable) {
+    private Map<String, String> parseProfiles(Elements deviceTable) {
         Element profileData = deviceTable.select("select").first();
-        return profileData.children().stream().map(profile -> {
-            String id = profile.attr("value");
-            String name = profile.text();
-            return new Profile(id, name);
-        }).collect(Collectors.toMap(Profile::getId, p -> p));
+        return profileData.children().stream().collect(Collectors.toMap(Element::text, p -> p.attr("value")));
+    }
+
+    public Map<String, String> getProfiles() {
+        return profiles;
     }
 
     public List<Device> saveDevices(List<Device> devices) throws Exception {
 
-        Map<String, String> deviceData = devices.stream().collect(Collectors.toMap(d -> d.getId(), d -> d.getCurrentProfile().getId()));
+        Map<String, String> deviceData = devices.stream().collect(Collectors.toMap(d -> "profile:" + d.getId(), Device::getProfile));
+        deviceData.put("apply", "");
+        deviceData.put("oldpage", "/internet/kids_userlist.lua");
 
-        Response<ResponseBody> deviceResponse = fritzBoxClient.sendDevices(deviceData).execute();
+        Response<ResponseBody> deviceResponse = fritzBoxClient.sendData(deviceData).execute();
 
         if (deviceResponse.isSuccessful()) {
             return parseDeviceTable(deviceResponse.body().string());

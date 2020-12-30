@@ -4,12 +4,12 @@ public class Device {
 
     private String id;
     private String name;
-    private Profile currentProfile;
+    private String profile;
 
-    public Device(String id, String name, Profile currentProfile) {
+    public Device(String id, String name, String profile) {
         this.id = id;
         this.name = name;
-        this.currentProfile = currentProfile;
+        this.profile = profile;
     }
 
     public String getId() {
@@ -20,8 +20,12 @@ public class Device {
         return name;
     }
 
-    public Profile getCurrentProfile() {
-        return currentProfile;
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
 
     @Override
@@ -29,7 +33,7 @@ public class Device {
         return "Device{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", currentProfile=" + currentProfile +
+                ", profile='" + profile + '\'' +
                 '}';
     }
 }
