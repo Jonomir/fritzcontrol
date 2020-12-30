@@ -10,7 +10,6 @@ import org.apache.commons.cli.ParseException;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 
 public class App {
@@ -48,10 +47,7 @@ public class App {
         System.out.println(profiles);
         devices.forEach(System.out::println);
 
-        Optional<Device> deviceToChange = devices.stream().filter(d -> d.getName().equals("Jonathan-PC")).findFirst();
-        deviceToChange.ifPresent(device -> {
-            device.setProfile(profiles.get("Fight The Addiction"));
-        });
+        devices.stream().filter(d -> d.getName().equals("Jonathan-PC")).forEach(device -> device.setProfile(profiles.get("Fight The Addiction")));
 
         System.out.println("========================= Device Changed =====================");
 
