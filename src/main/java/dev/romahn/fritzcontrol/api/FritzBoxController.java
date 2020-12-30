@@ -67,4 +67,17 @@ public class FritzBoxController {
             return new Profile(id, name);
         }).collect(Collectors.toMap(Profile::getId, p -> p));
     }
+
+    public List<Device> saveDevices(List<Device> devices) throws Exception {
+
+        Map<String, String> deviceData = devices.stream().collect(Collectors.toMap(d -> d.getId(), d -> d.getCurrentProfile().getId()));
+
+        Response<ResponseBody> deviceResponse = fritzBoxClient.sendDevices(deviceData).execute();
+
+        if (deviceResponse.isSuccessful()) {
+            return parseDeviceTable(deviceResponse.body().string());
+        } else {
+            throw new HttpException(deviceResponse);
+        }
+    }
 }
