@@ -1,22 +1,14 @@
 package dev.romahn.fritzcontrol;
 
-import dev.romahn.fritzcontrol.api.FritzBoxClient;
-import dev.romahn.fritzcontrol.api.auth.AuthenticationInterceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.ResponseBody;
+import dev.romahn.fritzcontrol.api.Device;
+import dev.romahn.fritzcontrol.api.FritzBoxController;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-import org.jsoup.select.Evaluator;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
-import java.io.IOException;
+import java.util.List;
 
 
 public class App {
@@ -45,28 +37,13 @@ public class App {
     }
 
 
-    private void execute(Configuration configuration) throws IOException {
+    private void execute(Configuration configuration) throws Exception {
+        FritzBoxController controller = new FritzBoxController(configuration);
 
+        List<Device> devices = controller.getDevices();
 
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new AuthenticationInterceptor(configuration))
-                .build();
-
-        FritzBoxClient fritzBoxClient = new Retrofit.Builder()
-                .client(okHttpClient)
-                .baseUrl(configuration.getFritzBoxUrl())
-                .build().create(FritzBoxClient.class);
-
-        Response<ResponseBody> kidLisResponse = fritzBoxClient.getData("kidLis").execute();
-
-        if (kidLisResponse.isSuccessful()) {
-            Document document = Jsoup.parse(kidLisResponse.body().string());
-            Elements deviceTable = document.select(new Evaluator.AttributeWithValue("id", "uiList"));
-
-            System.out.println(deviceTable);
-
-        }
-
+        devices.forEach(System.out::println);
     }
+
 
 }
