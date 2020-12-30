@@ -34,12 +34,12 @@ public class FritzBoxController {
 
     public List<Device> getDevices() throws Exception {
 
-        Response<ResponseBody> kidLisResponse = fritzBoxClient.getData("kidLis").execute();
+        Response<ResponseBody> response = fritzBoxClient.getData("kidLis").execute();
 
-        if (kidLisResponse.isSuccessful()) {
-            return parseDeviceTable(kidLisResponse.body().string());
+        if (response.isSuccessful()) {
+            return parseDeviceTable(response.body().string());
         } else {
-            throw new HttpException(kidLisResponse);
+            throw new HttpException(response);
         }
     }
 
@@ -75,12 +75,12 @@ public class FritzBoxController {
         deviceData.put("apply", "");
         deviceData.put("oldpage", "/internet/kids_userlist.lua");
 
-        Response<ResponseBody> deviceResponse = fritzBoxClient.sendData(deviceData).execute();
+        Response<ResponseBody> response = fritzBoxClient.sendData(deviceData).execute();
 
-        if (deviceResponse.isSuccessful()) {
-            return parseDeviceTable(deviceResponse.body().string());
+        if (response.isSuccessful()) {
+            return parseDeviceTable(response.body().string());
         } else {
-            throw new HttpException(deviceResponse);
+            throw new HttpException(response);
         }
     }
 }
