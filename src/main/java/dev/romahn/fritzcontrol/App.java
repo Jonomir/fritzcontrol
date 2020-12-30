@@ -14,7 +14,6 @@ import org.apache.commons.cli.ParseException;
 import retrofit2.Retrofit;
 
 import java.util.List;
-import java.util.Map;
 
 
 public class App {
@@ -57,19 +56,16 @@ public class App {
         DeviceController controller = new DeviceController(fritzBoxClient);
 
         List<Device> devices = controller.getDevices();
-        Map<String, String> profiles = controller.getProfiles();
-
-        System.out.println(profiles);
         devices.forEach(System.out::println);
 
-        devices.stream().filter(d -> d.getName().equals("Jonathan-PC")).forEach(device -> device.setProfile(profiles.get("Fight The Addiction")));
+        devices.stream().filter(d -> d.getName().equals("Jonathan-PC")).forEach(device ->
+            device.getProfiles().stream().filter(p -> p.getName().equals("Fight The Addiction")).findFirst()
+                    .ifPresent(device::setCurrentProfile));
 
-        System.out.println("========================= Device Changed =====================");
+        System.out.println("===================== Device Changed =====================");
 
         List<Device> changedDevices = controller.saveDevices(devices);
         changedDevices.forEach(System.out::println);
-
     }
-
 
 }

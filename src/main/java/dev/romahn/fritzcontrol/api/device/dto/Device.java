@@ -1,15 +1,21 @@
 package dev.romahn.fritzcontrol.api.device.dto;
 
+import java.security.InvalidParameterException;
+import java.util.Collections;
+import java.util.List;
+
 public class Device {
 
-    private String id;
-    private String name;
-    private String profile;
+    private final String id;
+    private final String name;
+    private Profile currentProfile;
+    private List<Profile> profiles;
 
-    public Device(String id, String name, String profile) {
+    public Device(String id, String name, Profile currentProfile, List<Profile> profiles) {
         this.id = id;
         this.name = name;
-        this.profile = profile;
+        this.currentProfile = currentProfile;
+        this.profiles = profiles;
     }
 
     public String getId() {
@@ -20,12 +26,20 @@ public class Device {
         return name;
     }
 
-    public String getProfile() {
-        return profile;
+    public Profile getCurrentProfile() {
+        return currentProfile;
     }
 
-    public void setProfile(String profile) {
-        this.profile = profile;
+    public List<Profile> getProfiles() {
+        return Collections.unmodifiableList(profiles);
+    }
+
+    public void setCurrentProfile(Profile currentProfile) {
+        if (!profiles.contains(currentProfile)) {
+            throw new InvalidParameterException("Profile must be part of this devices profiles");
+        }
+
+        this.currentProfile = currentProfile;
     }
 
     @Override
@@ -33,7 +47,8 @@ public class Device {
         return "Device{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", profile='" + profile + '\'' +
+                ", profile=" + currentProfile +
+                ", profiles=" + profiles +
                 '}';
     }
 }

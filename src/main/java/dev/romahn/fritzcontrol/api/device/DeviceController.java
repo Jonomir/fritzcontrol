@@ -3,6 +3,7 @@ package dev.romahn.fritzcontrol.api.device;
 import dev.romahn.fritzcontrol.api.CallUtil;
 import dev.romahn.fritzcontrol.api.FritzBoxClient;
 import dev.romahn.fritzcontrol.api.device.dto.Device;
+import dev.romahn.fritzcontrol.api.device.dto.Profile;
 import okhttp3.ResponseBody;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,6 +13,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 public class DeviceController {
@@ -34,7 +36,7 @@ public class DeviceController {
 
     public List<Device> saveDevices(List<Device> devices) throws IOException {
 
-        Map<String, String> deviceData = devices.stream().collect(Collectors.toMap(d -> "profile:" + d.getId(), Device::getProfile));
+        Map<String, String> deviceData = devices.stream().collect(Collectors.toMap(Device::getId, d -> d.getCurrentProfile().getId()));
         deviceData.put("apply", "");
         deviceData.put("oldpage", DEVICE_PAGE_PATH);
 
@@ -44,28 +46,28 @@ public class DeviceController {
 
     private List<Device> parseDeviceTable(ResponseBody in) throws IOException {
         Document document = Jsoup.parse(in.string());
-        Elements deviceTable = document.select("[id=uiDevices]");
+        Elements deviceTableData = document.select("[id=uiDevices]");
 
-        profiles = parseProfiles(deviceTable);
+        return deviceTableData.select("select").stream().map(profileListData -> {
+            String id = profileListData.attr("name");
 
-        return deviceTable.select("[class=block]").stream().map(e -> {
-            Element device = e.parent();
+            Element deviceData = profileListData.parent().parent();
+            String name = deviceData.selectFirst("[class=name]").attr("title");
 
-            String id = device.selectFirst("[data-uid]").attr("data-uid");
-            String name = device.selectFirst("[class=name]").attr("title");
-            String profile = device.selectFirst("[selected]").attr("value");
+            AtomicReference<Profile> currentProfile = new AtomicReference<>();
 
-            return new Device(id, name, profile);
+            List<Profile> profiles = profileListData.children().stream().map(profileData -> {
+                Profile profile = new Profile(profileData.attr("value"), profileData.text());
+
+                if (profileData.hasAttr("selected")) {
+                    currentProfile.set(profile);
+                }
+
+                return profile;
+            }).collect(Collectors.toList());
+
+            return new Device(id, name, currentProfile.get(), profiles);
         }).collect(Collectors.toList());
-    }
-
-    private Map<String, String> parseProfiles(Elements deviceTable) {
-        Element profileData = deviceTable.select("select").first();
-        return profileData.children().stream().collect(Collectors.toMap(Element::text, p -> p.attr("value")));
-    }
-
-    public Map<String, String> getProfiles() {
-        return profiles;
     }
 
 }
