@@ -1,4 +1,4 @@
-package dev.romahn.fritzcontrol.api.auth.api;
+package dev.romahn.fritzcontrol.api.auth.dto;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -25,5 +25,14 @@ public class SessionInfo {
 
     public String getBlockTime() {
         return blockTime;
+    }
+
+    @Override
+    public String toString() {
+        return "SessionInfo{" +
+                "challenge='" + challenge + '\'' +
+                ", sid='" + sid + '\'' +
+                ", blockTime='" + blockTime + '\'' +
+                '}';
     }
 }

@@ -1,6 +1,6 @@
 package dev.romahn.fritzcontrol.api.auth;
 
-import dev.romahn.fritzcontrol.api.auth.api.SessionInfo;
+import dev.romahn.fritzcontrol.api.auth.dto.SessionInfo;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;

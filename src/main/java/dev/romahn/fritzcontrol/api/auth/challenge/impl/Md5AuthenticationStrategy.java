@@ -1,5 +1,6 @@
-package dev.romahn.fritzcontrol.api.auth.challenge;
+package dev.romahn.fritzcontrol.api.auth.challenge.impl;
 
+import dev.romahn.fritzcontrol.api.auth.challenge.AuthenticationStrategy;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 

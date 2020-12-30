@@ -1,12 +1,17 @@
 package dev.romahn.fritzcontrol;
 
-import dev.romahn.fritzcontrol.api.Device;
-import dev.romahn.fritzcontrol.api.FritzBoxController;
+import dev.romahn.fritzcontrol.api.FritzBoxClient;
+import dev.romahn.fritzcontrol.api.auth.AuthenticationInterceptor;
+import dev.romahn.fritzcontrol.api.auth.challenge.impl.Md5AuthenticationStrategy;
+import dev.romahn.fritzcontrol.api.device.DeviceController;
+import dev.romahn.fritzcontrol.api.device.dto.Device;
+import okhttp3.OkHttpClient;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import retrofit2.Retrofit;
 
 import java.util.List;
 import java.util.Map;
@@ -39,7 +44,17 @@ public class App {
 
 
     private void execute(Configuration configuration) throws Exception {
-        FritzBoxController controller = new FritzBoxController(configuration);
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new AuthenticationInterceptor(configuration, new Md5AuthenticationStrategy()))
+                .build();
+
+        FritzBoxClient fritzBoxClient = new Retrofit.Builder()
+                .client(okHttpClient)
+                .baseUrl(configuration.getFritzBoxUrl())
+                .build().create(FritzBoxClient.class);
+
+        DeviceController controller = new DeviceController(fritzBoxClient);
 
         List<Device> devices = controller.getDevices();
         Map<String, String> profiles = controller.getProfiles();

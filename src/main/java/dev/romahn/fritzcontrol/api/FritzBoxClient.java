@@ -10,6 +10,7 @@ import retrofit2.http.POST;
 import java.util.Map;
 
 public interface FritzBoxClient {
+
     @POST("/data.lua")
     @FormUrlEncoded
     Call<ResponseBody> getData(@Field("page") String page);

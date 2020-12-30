@@ -1,4 +1,4 @@
-package dev.romahn.fritzcontrol.api;
+package dev.romahn.fritzcontrol.api.device.dto;
 
 public class Device {
 

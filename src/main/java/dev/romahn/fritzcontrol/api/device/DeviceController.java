@@ -1,34 +1,26 @@
-package dev.romahn.fritzcontrol.api;
+package dev.romahn.fritzcontrol.api.device;
 
-import dev.romahn.fritzcontrol.Configuration;
-import dev.romahn.fritzcontrol.api.auth.AuthenticationInterceptor;
-import okhttp3.OkHttpClient;
+import dev.romahn.fritzcontrol.api.CallUtil;
+import dev.romahn.fritzcontrol.api.FritzBoxClient;
+import dev.romahn.fritzcontrol.api.device.dto.Device;
 import okhttp3.ResponseBody;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import retrofit2.Retrofit;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class FritzBoxController {
+public class DeviceController {
 
     private FritzBoxClient fritzBoxClient;
     private Map<String, String> profiles;
 
-    public FritzBoxController(Configuration configuration) {
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new AuthenticationInterceptor(configuration))
-                .build();
-
-        this.fritzBoxClient = new Retrofit.Builder()
-                .client(okHttpClient)
-                .baseUrl(configuration.getFritzBoxUrl())
-                .build().create(FritzBoxClient.class);
+    public DeviceController(FritzBoxClient fritzBoxClient) {
+        this.fritzBoxClient = fritzBoxClient;
     }
 
     public List<Device> getDevices() throws IOException {

@@ -2,12 +2,12 @@ package dev.romahn.fritzcontrol.api.auth;
 
 import dev.romahn.fritzcontrol.Configuration;
 import dev.romahn.fritzcontrol.api.CallUtil;
-import dev.romahn.fritzcontrol.api.auth.api.SessionInfo;
 import dev.romahn.fritzcontrol.api.auth.challenge.AuthenticationStrategy;
+import dev.romahn.fritzcontrol.api.auth.dto.SessionInfo;
 import retrofit2.Retrofit;
 import retrofit2.converter.jaxb.JaxbConverterFactory;
 
-public class AuthenticationManager {
+public class AuthenticationController {
 
     private final Configuration configuration;
     private final AuthenticationStrategy authenticationStrategy;
@@ -15,7 +15,7 @@ public class AuthenticationManager {
 
     private String currentSid;
 
-    public AuthenticationManager(Configuration configuration, AuthenticationStrategy authenticationStrategy) {
+    public AuthenticationController(Configuration configuration, AuthenticationStrategy authenticationStrategy) {
         this.configuration = configuration;
         this.authenticationStrategy = authenticationStrategy;
         this.authenticationClient = new Retrofit.Builder()
