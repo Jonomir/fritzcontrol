@@ -16,6 +16,10 @@ import java.util.stream.Collectors;
 
 public class DeviceController {
 
+    private final static String DEVICE_PAGE_ID = "kidLis";
+    private final static String DEVICE_PAGE_PATH = "/internet/kids_userlist.lua";
+
+
     private FritzBoxClient fritzBoxClient;
     private Map<String, String> profiles;
 
@@ -24,7 +28,7 @@ public class DeviceController {
     }
 
     public List<Device> getDevices() throws IOException {
-        ResponseBody response = CallUtil.executeAndCheck(fritzBoxClient.getData("kidLis"));
+        ResponseBody response = CallUtil.executeAndCheck(fritzBoxClient.getData(DEVICE_PAGE_ID));
         return parseDeviceTable(response);
     }
 
@@ -32,7 +36,7 @@ public class DeviceController {
 
         Map<String, String> deviceData = devices.stream().collect(Collectors.toMap(d -> "profile:" + d.getId(), Device::getProfile));
         deviceData.put("apply", "");
-        deviceData.put("oldpage", "/internet/kids_userlist.lua");
+        deviceData.put("oldpage", DEVICE_PAGE_PATH);
 
         ResponseBody response = CallUtil.executeAndCheck(fritzBoxClient.sendData(deviceData));
         return parseDeviceTable(response);
