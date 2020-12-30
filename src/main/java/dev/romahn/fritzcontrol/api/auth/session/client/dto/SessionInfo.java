@@ -1,4 +1,4 @@
-package dev.romahn.fritzcontrol.api.auth.dto;
+package dev.romahn.fritzcontrol.api.auth.session.client.dto;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

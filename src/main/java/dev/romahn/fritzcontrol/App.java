@@ -2,7 +2,7 @@ package dev.romahn.fritzcontrol;
 
 import dev.romahn.fritzcontrol.api.FritzBoxClient;
 import dev.romahn.fritzcontrol.api.auth.AuthenticationInterceptor;
-import dev.romahn.fritzcontrol.api.auth.challenge.impl.Md5AuthenticationStrategy;
+import dev.romahn.fritzcontrol.api.auth.session.challenge.impl.Md5AuthenticationStrategy;
 import dev.romahn.fritzcontrol.api.data.device.DeviceDAO;
 import dev.romahn.fritzcontrol.api.data.device.dto.Device;
 import okhttp3.OkHttpClient;

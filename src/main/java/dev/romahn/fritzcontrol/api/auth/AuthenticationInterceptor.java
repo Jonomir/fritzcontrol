@@ -1,7 +1,8 @@
 package dev.romahn.fritzcontrol.api.auth;
 
 import dev.romahn.fritzcontrol.Configuration;
-import dev.romahn.fritzcontrol.api.auth.challenge.AuthenticationStrategy;
+import dev.romahn.fritzcontrol.api.auth.session.SessionManager;
+import dev.romahn.fritzcontrol.api.auth.session.challenge.AuthenticationStrategy;
 import okhttp3.FormBody;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -14,10 +15,10 @@ public class AuthenticationInterceptor implements Interceptor {
 
     private final static String METHOD = "POST";
 
-    private final AuthenticationController authenticationController;
+    private final SessionManager sessionManager;
 
     public AuthenticationInterceptor(final Configuration configuration, final AuthenticationStrategy authenticationStrategy) {
-        this.authenticationController = new AuthenticationController(configuration, authenticationStrategy);
+        this.sessionManager = new SessionManager(configuration, authenticationStrategy);
     }
 
     @Override
@@ -28,7 +29,7 @@ public class AuthenticationInterceptor implements Interceptor {
 
             String sessionId;
             try {
-                sessionId = authenticationController.getSessionId();
+                sessionId = sessionManager.getSessionId();
             } catch (Exception e) {
                 throw new IOException("Can not inject session id for authentication", e);
             }
