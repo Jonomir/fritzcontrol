@@ -23,9 +23,11 @@ public class DeviceController {
     }
 
     private void setProfileForDevice(List<Device> devices, String deviceName, String profileName) {
-        devices.stream().filter(d -> d.getName().equals(deviceName)).forEach(device ->
-                                                                                     device.getProfiles().stream().filter(p -> p.getName().equals(profileName)).findFirst()
-                                                                                             .ifPresent(device::setCurrentProfile));
+        devices.stream().filter(
+                d -> d.getName().equals(deviceName)).forEach(
+                d -> d.getProfiles().stream().filter(
+                        p -> p.getName().equals(profileName))
+                        .findFirst().ifPresent(d::setCurrentProfile));
     }
 
 }
