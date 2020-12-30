@@ -1,4 +1,4 @@
-package dev.romahn.fritzcontrol.api.data.device.dto;
+package dev.romahn.fritzcontrol.api.data.device.dao.dto;
 
 public class Profile {
 

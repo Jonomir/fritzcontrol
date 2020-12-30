@@ -3,8 +3,7 @@ package dev.romahn.fritzcontrol;
 import dev.romahn.fritzcontrol.api.FritzBoxClient;
 import dev.romahn.fritzcontrol.api.auth.AuthenticationInterceptor;
 import dev.romahn.fritzcontrol.api.auth.session.challenge.impl.Md5AuthenticationStrategy;
-import dev.romahn.fritzcontrol.api.data.device.DeviceDAO;
-import dev.romahn.fritzcontrol.api.data.device.dto.Device;
+import dev.romahn.fritzcontrol.api.data.device.DeviceController;
 import okhttp3.OkHttpClient;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -13,9 +12,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import retrofit2.Retrofit;
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -57,26 +54,13 @@ public class App {
     private void execute(Configuration configuration) throws Exception {
 
         FritzBoxClient fritzBoxClient = createAuthenticatingFritzBoxClient(configuration);
-        DeviceDAO deviceDAO = new DeviceDAO(fritzBoxClient);
+        DeviceController deviceController = new DeviceController(fritzBoxClient);
 
         Map<String, String> deviceProfiles = new HashMap<>();
 
         deviceProfiles.put("Jonathan-PC", "Fight The Addiction");
 
-        setProfilesForDevices(deviceDAO, deviceProfiles);
-    }
-
-
-    private void setProfilesForDevices(DeviceDAO deviceDAO, Map<String, String> deviceProfiles) throws IOException {
-        List<Device> devices = deviceDAO.fetch();
-        deviceProfiles.forEach((deviceName, profileName) -> setProfileForDevice(devices, deviceName, profileName));
-        deviceDAO.send(devices);
-    }
-
-    private void setProfileForDevice(List<Device> devices, String deviceName, String profileName) {
-        devices.stream().filter(d -> d.getName().equals(deviceName)).forEach(device ->
-            device.getProfiles().stream().filter(p -> p.getName().equals(profileName)).findFirst()
-                    .ifPresent(device::setCurrentProfile));
+        deviceController.setProfilesForDevices(deviceProfiles);
     }
 
 }
