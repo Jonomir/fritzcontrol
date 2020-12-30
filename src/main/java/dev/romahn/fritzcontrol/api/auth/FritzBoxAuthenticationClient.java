@@ -6,18 +6,18 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
+import retrofit2.http.Url;
 
 public interface FritzBoxAuthenticationClient {
-    @GET("{path}")
-    Call<SessionInfo> getSessionInfo(@Path("path") String path);
+    @GET
+    Call<SessionInfo> getSessionInfo(@Url String path);
 
-    @POST("{path}")
+    @POST
     @FormUrlEncoded
-    Call<SessionInfo> login(@Path("path") String path, @Field("username") String username, @Field("response") String response);
+    Call<SessionInfo> login(@Url String path, @Field("username") String username, @Field("response") String response);
 
-    @POST("{path}")
+    @POST
     @FormUrlEncoded
-    Call<SessionInfo> validateSession(@Path("path") String path, @Field("sid") String sid);
+    Call<SessionInfo> validateSession(@Url String path, @Field("sid") String sid);
 }
 
