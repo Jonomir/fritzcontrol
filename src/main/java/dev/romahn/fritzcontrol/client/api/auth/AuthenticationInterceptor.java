@@ -1,8 +1,7 @@
-package dev.romahn.fritzcontrol.api.auth;
+package dev.romahn.fritzcontrol.client.api.auth;
 
-import dev.romahn.fritzcontrol.Configuration;
-import dev.romahn.fritzcontrol.api.auth.session.SessionManager;
-import dev.romahn.fritzcontrol.api.auth.session.challenge.AuthenticationStrategy;
+import dev.romahn.fritzcontrol.client.FritzControl;
+import dev.romahn.fritzcontrol.client.api.auth.session.SessionManager;
 import okhttp3.FormBody;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -17,8 +16,8 @@ public class AuthenticationInterceptor implements Interceptor {
 
     private final SessionManager sessionManager;
 
-    public AuthenticationInterceptor(final Configuration configuration, final AuthenticationStrategy authenticationStrategy) {
-        this.sessionManager = new SessionManager(configuration, authenticationStrategy);
+    public AuthenticationInterceptor(FritzControl fritzControl) {
+        this.sessionManager = new SessionManager(fritzControl);
     }
 
     @Override

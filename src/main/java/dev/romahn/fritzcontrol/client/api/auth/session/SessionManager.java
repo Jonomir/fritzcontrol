@@ -1,26 +1,23 @@
-package dev.romahn.fritzcontrol.api.auth.session;
+package dev.romahn.fritzcontrol.client.api.auth.session;
 
-import dev.romahn.fritzcontrol.Configuration;
-import dev.romahn.fritzcontrol.api.CallUtil;
-import dev.romahn.fritzcontrol.api.auth.session.challenge.AuthenticationStrategy;
-import dev.romahn.fritzcontrol.api.auth.session.client.FritzBoxAuthenticationClient;
-import dev.romahn.fritzcontrol.api.auth.session.client.dto.SessionInfo;
+import dev.romahn.fritzcontrol.client.FritzControl;
+import dev.romahn.fritzcontrol.client.api.auth.session.client.FritzBoxAuthenticationClient;
+import dev.romahn.fritzcontrol.client.api.auth.session.client.dto.SessionInfo;
+import dev.romahn.fritzcontrol.client.util.CallUtil;
 import retrofit2.Retrofit;
 import retrofit2.converter.jaxb.JaxbConverterFactory;
 
 public class SessionManager {
 
-    private final Configuration configuration;
-    private final AuthenticationStrategy authenticationStrategy;
+    private final FritzControl fritzControl;
     private final FritzBoxAuthenticationClient authenticationClient;
 
     private String currentSid;
 
-    public SessionManager(Configuration configuration, AuthenticationStrategy authenticationStrategy) {
-        this.configuration = configuration;
-        this.authenticationStrategy = authenticationStrategy;
+    public SessionManager(FritzControl fritzControl) {
+        this.fritzControl = fritzControl;
         this.authenticationClient = new Retrofit.Builder()
-                .baseUrl(configuration.getFritzBoxUrl())
+                .baseUrl(fritzControl.getUrl())
                 .addConverterFactory(JaxbConverterFactory.create())
                 .build()
                 .create(FritzBoxAuthenticationClient.class);
@@ -29,13 +26,13 @@ public class SessionManager {
     public String getSessionId() throws Exception {
 
         if (sidIsValid(currentSid)) {
-            SessionInfo sessionInfo = CallUtil.executeAndCheck(authenticationClient.validateSession(authenticationStrategy.getPath(), currentSid));
+            SessionInfo sessionInfo = CallUtil.executeAndCheck(authenticationClient.validateSession(fritzControl.getAuthenticationStrategy().getPath(), currentSid));
 
             if (!sidIsValid(sessionInfo.getSid())) {
                 fetchNewSid(sessionInfo);
             }
         } else {
-            SessionInfo sessionInfo = CallUtil.executeAndCheck(authenticationClient.getSessionInfo(authenticationStrategy.getPath()));
+            SessionInfo sessionInfo = CallUtil.executeAndCheck(authenticationClient.getSessionInfo(fritzControl.getAuthenticationStrategy().getPath()));
             fetchNewSid(sessionInfo);
         }
         return currentSid;
@@ -43,9 +40,10 @@ public class SessionManager {
 
 
     private void fetchNewSid(SessionInfo sessionInfo) throws Exception {
-        String challengeAnswer = authenticationStrategy.createChallengeResponse(sessionInfo.getChallenge(), configuration.getPassword());
+        String challengeAnswer = fritzControl.getAuthenticationStrategy().createChallengeResponse(sessionInfo.getChallenge(), fritzControl.getPassword());
 
-        SessionInfo newSessionInfo = CallUtil.executeAndCheck(authenticationClient.login(authenticationStrategy.getPath(), configuration.getUsername(), challengeAnswer));
+        SessionInfo newSessionInfo = CallUtil.executeAndCheck(
+                authenticationClient.login(fritzControl.getAuthenticationStrategy().getPath(), fritzControl.getUsername(), challengeAnswer));
         String newSid = newSessionInfo.getSid();
 
         if (sidIsValid(newSid)) {

@@ -1,16 +1,12 @@
 package dev.romahn.fritzcontrol;
 
-import dev.romahn.fritzcontrol.api.FritzBoxClient;
-import dev.romahn.fritzcontrol.api.auth.AuthenticationInterceptor;
-import dev.romahn.fritzcontrol.api.auth.session.challenge.impl.Md5AuthenticationStrategy;
-import dev.romahn.fritzcontrol.api.data.device.DeviceController;
-import okhttp3.OkHttpClient;
+import dev.romahn.fritzcontrol.client.FritzControl;
+import dev.romahn.fritzcontrol.client.api.data.device.DeviceController;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import retrofit2.Retrofit;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,38 +19,38 @@ public class App {
         app.execute(createConfig(args));
     }
 
-    private static Configuration createConfig(String[] args) throws ParseException {
+    private static FritzControl createConfig(String[] args) throws ParseException {
 
         Options options = new Options();
-        options.addOption("url", "url", true, "FritzBox Url, default is http://fritz.box");
         options.addRequiredOption("u", "username", true, "Username for FritzBox login");
         options.addRequiredOption("p", "password", true, "Password for FritzBox login");
+        options.addOption("url", "url", true, "FritzBox Url, default is http://fritz.box");
+        options.addOption("a", "auth", true, "Authentication Strategy, possible values MD5 & PBKDF2, default is MD5");
 
         CommandLineParser parser = new DefaultParser();
         CommandLine commandLine = parser.parse(options, args, true);
 
-        String fritzBoxUrl = commandLine.getOptionValue("url", "http://fritz.box");
-        String username = commandLine.getOptionValue("u");
-        String password = commandLine.getOptionValue("p");
+        FritzControl.Builder builder = new FritzControl.Builder();
 
-        return new Configuration(fritzBoxUrl, username, password);
+        builder.username(commandLine.getOptionValue("username"));
+        builder.password(commandLine.getOptionValue("password"));
+
+        String url = commandLine.getOptionValue("url");
+        if (url != null) {
+            builder.url(url);
+        }
+
+        String auth = commandLine.getOptionValue("auth");
+        if (auth != null) {
+            builder.authenticationStrategy(auth);
+        }
+
+        return builder.build();
     }
 
-    private FritzBoxClient createAuthenticatingFritzBoxClient(Configuration configuration) {
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new AuthenticationInterceptor(configuration, new Md5AuthenticationStrategy()))
-                .build();
+    private void execute(FritzControl fritzControl) throws Exception {
 
-        return new Retrofit.Builder()
-                .client(okHttpClient)
-                .baseUrl(configuration.getFritzBoxUrl())
-                .build().create(FritzBoxClient.class);
-    }
-
-    private void execute(Configuration configuration) throws Exception {
-
-        FritzBoxClient fritzBoxClient = createAuthenticatingFritzBoxClient(configuration);
-        DeviceController deviceController = new DeviceController(fritzBoxClient);
+        DeviceController deviceController = new DeviceController(fritzControl.getClient());
 
         Map<String, String> deviceProfiles = new HashMap<>();
 
