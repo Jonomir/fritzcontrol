@@ -1,4 +1,4 @@
-package dev.romahn.fritzcontrol.api;
+ package dev.romahn.fritzcontrol.client.util;
 
 import retrofit2.Call;
 import retrofit2.HttpException;

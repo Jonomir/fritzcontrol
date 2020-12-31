@@ -1,9 +1,9 @@
-package dev.romahn.fritzcontrol.api.data.device.dao;
+package dev.romahn.fritzcontrol.client.api.data.device.dao;
 
-import dev.romahn.fritzcontrol.api.FritzBoxClient;
-import dev.romahn.fritzcontrol.api.data.AbstractDataDAO;
-import dev.romahn.fritzcontrol.api.data.device.dao.dto.Device;
-import dev.romahn.fritzcontrol.api.data.device.dao.dto.Profile;
+import dev.romahn.fritzcontrol.client.api.FritzBoxClient;
+import dev.romahn.fritzcontrol.client.api.data.AbstractDataDAO;
+import dev.romahn.fritzcontrol.client.api.data.device.dao.dto.Device;
+import dev.romahn.fritzcontrol.client.api.data.device.dao.dto.Profile;
 import okhttp3.ResponseBody;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

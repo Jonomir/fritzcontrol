@@ -1,8 +1,8 @@
-package dev.romahn.fritzcontrol.api.data.device;
+package dev.romahn.fritzcontrol.client.api.data.device;
 
-import dev.romahn.fritzcontrol.api.FritzBoxClient;
-import dev.romahn.fritzcontrol.api.data.device.dao.DeviceDAO;
-import dev.romahn.fritzcontrol.api.data.device.dao.dto.Device;
+import dev.romahn.fritzcontrol.client.api.FritzBoxClient;
+import dev.romahn.fritzcontrol.client.api.data.device.dao.DeviceDAO;
+import dev.romahn.fritzcontrol.client.api.data.device.dao.dto.Device;
 
 import java.io.IOException;
 import java.util.List;

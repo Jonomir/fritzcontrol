@@ -1,4 +1,4 @@
-package dev.romahn.fritzcontrol.api.auth.session.challenge;
+package dev.romahn.fritzcontrol.client.api.auth.session.challenge;
 
 public interface AuthenticationStrategy {
 

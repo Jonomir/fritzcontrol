@@ -1,4 +1,4 @@
-package dev.romahn.fritzcontrol.api;
+package dev.romahn.fritzcontrol.client.api;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

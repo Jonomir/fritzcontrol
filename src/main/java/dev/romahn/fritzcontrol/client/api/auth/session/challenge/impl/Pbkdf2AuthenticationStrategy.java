@@ -1,6 +1,6 @@
-package dev.romahn.fritzcontrol.api.auth.session.challenge.impl;
+package dev.romahn.fritzcontrol.client.api.auth.session.challenge.impl;
 
-import dev.romahn.fritzcontrol.api.auth.session.challenge.AuthenticationStrategy;
+import dev.romahn.fritzcontrol.client.api.auth.session.challenge.AuthenticationStrategy;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;

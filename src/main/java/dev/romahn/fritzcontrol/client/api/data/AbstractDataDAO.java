@@ -1,7 +1,7 @@
-package dev.romahn.fritzcontrol.api.data;
+package dev.romahn.fritzcontrol.client.api.data;
 
-import dev.romahn.fritzcontrol.api.CallUtil;
-import dev.romahn.fritzcontrol.api.FritzBoxClient;
+import dev.romahn.fritzcontrol.client.api.FritzBoxClient;
+import dev.romahn.fritzcontrol.client.util.CallUtil;
 import okhttp3.ResponseBody;
 
 import java.io.IOException;
