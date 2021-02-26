@@ -23,7 +23,7 @@ public class CallUtil {
             Objects.requireNonNull(body, "Response body was null");
             return body;
         } catch (IOException e) {
-            throw new RuntimeException("Error executing call to" + call.request().url().toString(), e);
+            throw new RuntimeException("Error executing call to " + call.request().url().toString(), e);
         }
     }
 }

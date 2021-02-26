@@ -27,8 +27,8 @@ public class App {
         options.addRequiredOption("p", "password", true, "Password for FritzBox login");
         options.addOption("url", "url", true, "FritzBox Url, default is http://fritz.box");
         options.addOption("a", "auth", true, "Authentication Strategy, possible values MD5 & PBKDF2, default is MD5");
-        options.addRequiredOption("d", "device", true, "The device on which to set the profile");
-        options.addRequiredOption("p", "profile", true, "The profile to set the device to");
+        options.addRequiredOption("D", "device", true, "The device on which to set the profile");
+        options.addRequiredOption("P", "profile", true, "The profile to set the device to");
 
         CommandLineParser parser = new DefaultParser();
         return parser.parse(options, args, true);
