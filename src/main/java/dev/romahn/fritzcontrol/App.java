@@ -56,7 +56,7 @@ public class App {
 
     private void execute(FritzControl fritzControl, CommandLine commandLine) throws Exception {
 
-        DeviceController deviceController = new DeviceController(fritzControl.getClient());
+        DeviceController deviceController = new DeviceController(fritzControl);
 
         Map<String, String> deviceProfiles = new HashMap<>();
         String device = commandLine.getOptionValue("device");

@@ -1,6 +1,6 @@
 package dev.romahn.fritzcontrol.client.api.data.device;
 
-import dev.romahn.fritzcontrol.client.api.FritzBoxClient;
+import dev.romahn.fritzcontrol.client.FritzControl;
 import dev.romahn.fritzcontrol.client.api.data.device.dao.DeviceDAO;
 import dev.romahn.fritzcontrol.client.api.data.device.dao.dto.Device;
 
@@ -12,8 +12,8 @@ public class DeviceController {
 
     private DeviceDAO deviceDAO;
 
-    public DeviceController(FritzBoxClient client) {
-        this.deviceDAO = new DeviceDAO(client);
+    public DeviceController(FritzControl fritzControl) {
+        this.deviceDAO = new DeviceDAO(fritzControl);
     }
 
     public void setProfilesForDevices(Map<String, String> deviceProfiles) throws IOException {

@@ -1,5 +1,6 @@
 package dev.romahn.fritzcontrol.client.api.data;
 
+import dev.romahn.fritzcontrol.client.FritzControl;
 import dev.romahn.fritzcontrol.client.api.FritzBoxClient;
 import dev.romahn.fritzcontrol.client.util.CallUtil;
 import okhttp3.ResponseBody;
@@ -12,9 +13,9 @@ public abstract class AbstractDataDAO<T> {
 
     private FritzBoxClient client;
 
-    public AbstractDataDAO(FritzBoxClient client) {
-        Objects.requireNonNull(client, "client must not be null");
-        this.client = client;
+    public AbstractDataDAO(FritzControl fritzControl) {
+        Objects.requireNonNull(fritzControl, "fritzControl must not be null");
+        this.client = fritzControl.getClient();
     }
 
     protected abstract String getPageId();

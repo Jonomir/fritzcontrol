@@ -1,6 +1,6 @@
 package dev.romahn.fritzcontrol.client.api.data.device.dao;
 
-import dev.romahn.fritzcontrol.client.api.FritzBoxClient;
+import dev.romahn.fritzcontrol.client.FritzControl;
 import dev.romahn.fritzcontrol.client.api.data.AbstractDataDAO;
 import dev.romahn.fritzcontrol.client.api.data.device.dao.dto.Device;
 import dev.romahn.fritzcontrol.client.api.data.device.dao.dto.Profile;
@@ -21,8 +21,8 @@ public class DeviceDAO extends AbstractDataDAO<List<Device>> {
     private final static String DEVICE_PAGE_ID = "kidLis";
     private final static String DEVICE_PAGE_PATH = "/internet/kids_userlist.lua";
 
-    public DeviceDAO(FritzBoxClient client) {
-        super(client);
+    public DeviceDAO(FritzControl fritzControl) {
+        super(fritzControl);
     }
 
     @Override
