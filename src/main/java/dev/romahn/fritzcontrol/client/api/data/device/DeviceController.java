@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class DeviceController {
 
-    private DeviceDAO deviceDAO;
+    private final DeviceDAO deviceDAO;
 
     public DeviceController(FritzControl fritzControl) {
         this.deviceDAO = new DeviceDAO(fritzControl);

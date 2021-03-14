@@ -9,7 +9,7 @@ public class Device {
     private final String id;
     private final String name;
     private Profile currentProfile;
-    private List<Profile> profiles;
+    private final List<Profile> profiles;
 
     public Device(String id, String name, Profile currentProfile, List<Profile> profiles) {
         this.id = id;

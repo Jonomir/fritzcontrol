@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public abstract class AbstractDataDAO<T> {
 
-    private FritzBoxClient client;
+    private final FritzBoxClient client;
 
     public AbstractDataDAO(FritzControl fritzControl) {
         Objects.requireNonNull(fritzControl, "fritzControl must not be null");
