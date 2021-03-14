@@ -1,7 +1,9 @@
 # fritzcontrol
 A little java command line tool to manage the AVM fritz box parental controls
 
-Usage: `java -jar <jar> -u <username> -p <password> -D <Device> -P <Profile>`
+Usage: `java -jar <jar> -u <username> -p <password> <Device>=<Profile>...`
+
+Example: `java -jar <jar> -u Tom -p Secret123 Tom-Phone=Standard "Tom PC=Study Time"`
 
 Additional Options: 
 - `-url` default is `fritz.box`

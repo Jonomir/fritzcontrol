@@ -8,7 +8,9 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import java.security.InvalidParameterException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -18,7 +20,7 @@ public class App {
         CommandLine commandLine = parseArgs(args);
 
         App app = new App();
-        app.execute(createFritzControl(commandLine), commandLine);
+        app.execute(createFritzControl(commandLine), commandLine.getArgList());
     }
 
     private static CommandLine parseArgs(String[] args) throws ParseException {
@@ -27,11 +29,9 @@ public class App {
         options.addRequiredOption("p", "password", true, "Password for FritzBox login");
         options.addOption("url", "url", true, "FritzBox Url, default is http://fritz.box");
         options.addOption("a", "auth", true, "Authentication Strategy, possible values MD5 & PBKDF2, default is MD5");
-        options.addRequiredOption("D", "device", true, "The device on which to set the profile");
-        options.addRequiredOption("P", "profile", true, "The profile to set the device to");
 
         CommandLineParser parser = new DefaultParser();
-        return parser.parse(options, args, true);
+        return parser.parse(options, args, false);
     }
 
     private static FritzControl createFritzControl(CommandLine commandLine) {
@@ -54,18 +54,22 @@ public class App {
         return builder.build();
     }
 
-    private void execute(FritzControl fritzControl, CommandLine commandLine) throws Exception {
-
-        DeviceController deviceController = new DeviceController(fritzControl);
+    private void execute(FritzControl fritzControl, List<String> args) throws Exception {
 
         Map<String, String> deviceProfiles = new HashMap<>();
-        String device = commandLine.getOptionValue("device");
-        String profile = commandLine.getOptionValue("profile");
-        deviceProfiles.put(device, profile);
 
+        for (String arg : args) {
+            String[] parts = arg.split("=");
+
+            if (parts.length != 2) {
+                throw new InvalidParameterException("try device=profile");
+            }
+
+            deviceProfiles.put(parts[0], parts[1]);
+        }
+
+        DeviceController deviceController = new DeviceController(fritzControl);
         deviceController.setProfilesForDevices(deviceProfiles);
-
-        System.out.println("Set " + device + " to " + profile);
     }
 
 }

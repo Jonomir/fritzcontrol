@@ -28,6 +28,8 @@ public class DeviceController {
                 d -> d.getProfiles().stream().filter(
                         p -> p.getName().equals(profileName))
                         .findFirst().ifPresent(d::setCurrentProfile));
+
+        System.out.println("Set " + deviceName + " to " + profileName);
     }
 
 }
